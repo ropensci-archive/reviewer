@@ -16,7 +16,7 @@ diff_rmd_css()
 
 \item{reference_file}{string: path to file before changes}
 
-\item{show}{string: \code{"raw"} (show differences in the raw rmarkdown file) or \code{"rendered"} (show differences in the rendered output)}
+\item{show}{string: \code{"raw"} (show differences in the raw rmarkdown file) or \code{"rendered"} (show differences in the rendered output). Note that the \code{"rendered"} output is unlikely to work well if a change has been made inside a code block in the rmarkdown document. The primary use for this package is anticipated to be the \code{"raw"} output}
 
 \item{output_format}{string: format of the output file (currently only \code{"html_document"})}
 

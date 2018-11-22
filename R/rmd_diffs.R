@@ -2,7 +2,7 @@
 #'
 #' @param current_file string: path to file after changes
 #' @param reference_file string: path to file before changes
-#' @param show string: \code{"raw"} (show differences in the raw rmarkdown file) or \code{"rendered"} (show differences in the rendered output)
+#' @param show string: \code{"raw"} (show differences in the raw rmarkdown file) or \code{"rendered"} (show differences in the rendered output). Note that the \code{"rendered"} output is unlikely to work well if a change has been made inside a code block in the rmarkdown document. The primary use for this package is anticipated to be the \code{"raw"} output
 #' @param output_format string: format of the output file (currently only \code{"html_document"})
 #' @param keep_intermediate logical: keep the intermediate rmarkdown file?
 #' @param quiet logical: if \code{TRUE}, suppress pandoc output (Only applicable if \code{show="rendered"})
