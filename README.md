@@ -101,9 +101,10 @@ result <- diff_rmd(modified_file, "750ab4")
       - is an RStudio-specific addin, whereas `reviewer` can be used
         outside of the RStudio environment (e.g. with your preferred
         text editor)
-      - shows changes in the *rendered* rmarkdown file (i.e. once it has
-        been converted to its HTML document format). `reviewer` shows
-        changes in the raw rmarkdown document.
+      - shows changes only in the *rendered* rmarkdown file (i.e. once
+        it has been converted to its HTML document format). `reviewer`
+        can show changes in either the raw rmarkdown document or its
+        rendered output.
 
   - [latexdiffr](https://github.com/hughjonesd/latexdiffr) similarly
     shows differences in the *rendered* document, but uses the
