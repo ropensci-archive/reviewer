@@ -2,7 +2,7 @@
 #'
 #' @param current_file string: path to file after changes
 #' @param reference_file string: path to file before changes
-#' @param output_format string: format of the output file (currently only \code{"html"}) 
+#' @param output_format string: format of the output file (currently only \code{"html_document"})
 #' @param keep_intermediate logical: keep the intermediate rmarkdown file (which contains the marked-up differences)
 #' @param quiet logical: if \code{TRUE}, suppress pandoc output during \code{rmarkdown::render} call
 #'
@@ -16,7 +16,7 @@
 #'
 #' @export
 diff_rmd <- function(current_file, reference_file = "HEAD", output_format = "html_document", keep_intermediate = FALSE, quiet = TRUE) {
-    output_format <- match.arg(tolower(output_format), c("html_document"))#, "pdf_document"))
+    output_format <- match.arg(tolower(output_format), c("html_document"))##, "pdf_document"))
     ## or get default document format from rmarkdown::default_output_format(current_file)$name
 
     debug <- FALSE ## just for internal debugging use
@@ -76,7 +76,12 @@ diff_rmd <- function(current_file, reference_file = "HEAD", output_format = "htm
         ## and append stylesheet
         diffout <- c(diffout, "<style>.del,.ins { display: inline-block; margin-left: 0.5ex; } .del { background-color: #fcc; } .ins{ background-color: #cfc; }")
     } else if (output_format == "pdf_document") {
-        stop("not yet eh")
+        stop("pdf_document format not supported yet")
+        ## needs xcolor package available within LaTeX
+        diffout <- gsub("[-", "\\textcolor{red}{", diffout, fixed = TRUE)
+        diffout <- gsub("-]", "}", diffout, fixed = TRUE)
+        diffout <- gsub("{+", "\\textcolor{green}{", diffout, fixed = TRUE)
+        diffout <- gsub("+}", "}", diffout, fixed = TRUE)
     } else {
         stop("unsupported output_format: ", output_format)
     }
