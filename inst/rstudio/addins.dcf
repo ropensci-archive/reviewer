@@ -2,3 +2,8 @@ Name: Insert html annotation js snippet
 Description: Inserts js snippet to enable html annotations using Hypothes.is
 Binding: enable_html_annotation
 Interactive: false
+
+Name: View rmd diff
+Description: Shows diff rendered in Viewer
+Binding: diff_rmd_addin
+Interactive: false
