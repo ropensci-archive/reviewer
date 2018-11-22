@@ -1,0 +1,68 @@
+---
+title: "Reviewer"
+author: "The reviewer package authors"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{reviewer}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Differences between rmarkdown files
+
+The `diff_rmd` function can be used to produce a nicely-formatted document showing the differences between two rmarkdown files. For the purposes of demonstration, we'll use the example files bundled with the package. We'll compare `modified_file` to its earlier version `reference_file`:
+
+```{r exfile1}
+modified_file <- system.file("extdata/CheatSheet-modified.Rmd", package = "reviewer")
+reference_file <- system.file("extdata/CheatSheet.Rmd", package = "reviewer")
+```
+
+```{r exfile2, echo = FALSE}
+## for demo purposes, just take the first few lines of these files
+tempfile1 <- tempfile()
+writeLines(head(readLines(modified_file), 14), con = tempfile1)
+modified_file <- tempfile1
+tempfile2 <- tempfile()
+writeLines(head(readLines(reference_file), 12), con = tempfile2)
+reference_file <- tempfile2
+```
+
+Compare:
+
+```{r dodiff, eval = FALSE}
+library(reviewer)
+result <- diff_rmd(modified_file, reference_file)
+```
+
+And our output:
+
+```{r dodiff-hidden, echo = FALSE}
+## some minor trickery to make the rendered output appear properly in the README.md
+library(reviewer)
+result <- diff_rmd(modified_file, reference_file)
+htmltools::includeHTML(result$raw)
+```
+
+We can also compare the current version of a document to a previous version in stored in a git repository. (These examples are not run here).
+
+If a `reference_file` argument is not provided, by default the `modified_file` will be compared to the most recent copy in the git repo:
+
+```{r diff-ex-2, eval = FALSE}
+result <- diff_rmd(modified_file)
+```
+
+Or we can compare it to how it appeared in the git repository after a particular commit (here, the commit with reference 750ab4):
+
+```{r diff-ex-3, eval = FALSE}
+result <- diff_rmd(modified_file, "750ab4")
+```
+
+
