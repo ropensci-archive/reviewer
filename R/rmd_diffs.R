@@ -77,14 +77,14 @@ diff_rmd <- function(current_file, reference_file = "HEAD", output_format = "htm
     ## strip the headers, which are the first 5 lines
     diffout <- diffout[seq(from = 6, to = length(diffout), by = 1)]
 
-    if (output_format == "html_document") {
+    if (output_format %in% c("html_document")) {
         ## mark up the insert/deletes as HTML markup
         diffout <- gsub("[-", "<del class=\"del\">", diffout, fixed = TRUE)
         diffout <- gsub("-]", "</del>", diffout, fixed = TRUE)
         diffout <- gsub("{+", "<ins class=\"ins\">", diffout, fixed = TRUE)
         diffout <- gsub("+}", "</ins>", diffout, fixed = TRUE)
         ## and append stylesheet
-        diffout <- c(diffout, "<style>.del,.ins { display: inline-block; margin-left: 0.5ex; } .del { background-color: #fcc; } .ins{ background-color: #cfc; }")
+        diffout <- c(diffout, "<style>.del { background-color: SandyBrown; } .ins{ background-color: PaleGreen; }")
     } else if (output_format == "pdf_document") {
         stop("pdf_document format not supported yet")
         ## needs xcolor package available within LaTeX
