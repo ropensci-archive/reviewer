@@ -22,6 +22,12 @@ diff_rmd <- function(file_before, file_after, output_format = "html_document", k
     ## -U2000 specifies how much context is included around each individual change
     ## we want the whole document here so it needs to be large (could count lines in file?)
 
+    ## todo: catch errors directly from system2 call
+    if (length(diffout) < 6) {
+        ## no output
+        stop("error generating file differences")
+    }
+
     ## strip the headers, which are the first 5 lines
     diffout <- diffout[seq(from = 6, to = length(diffout), by = 1)]
 
@@ -29,8 +35,8 @@ diff_rmd <- function(file_before, file_after, output_format = "html_document", k
         ## mark up the insert/deletes as HTML markup
         diffout <- gsub("[-", "<del class=\"del\">", diffout, fixed = TRUE)
         diffout <- gsub("-]", "</del>", diffout, fixed = TRUE)
-        diffout <- gsub("[+", "<ins class=\"ins\">", diffout, fixed = TRUE)
-        diffout <- gsub("+]", "</ins>", diffout, fixed = TRUE)
+        diffout <- gsub("{+", "<ins class=\"ins\">", diffout, fixed = TRUE)
+        diffout <- gsub("+}", "</ins>", diffout, fixed = TRUE)
         ## and append stylesheet
         diffout <- c(diffout, "<style>.del,.ins { display: inline-block; margin-left: 0.5ex; } .del { background-color: #fcc; } .ins{ background-color: #cfc; }")
     } else if (output_format == "pdf_document") {
