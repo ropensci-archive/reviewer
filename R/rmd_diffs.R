@@ -4,12 +4,12 @@
 #' @param reference_file string: path to file before changes
 #' @param show string: \code{"raw"} (show differences in the raw rmarkdown file) or \code{"rendered"} (show differences in the rendered output)
 #' @param output_format string: format of the output file (currently only \code{"html_document"})
-#' @param keep_intermediate logical: keep the intermediate rmarkdown file? (Only applicable if \code{show="rendered"})
+#' @param keep_intermediate logical: keep the intermediate rmarkdown file?
 #' @param quiet logical: if \code{TRUE}, suppress pandoc output (Only applicable if \code{show="rendered"})
 #' @param css character vector: css specification to apply to changed sections. Defaults to \code{diff_rmd_css()}; specify \code{NULL} to not include a \code{<style>} section in the output
 # @param escape_code_chunks logical: escape three-backtick code chunks?
 #'
-#' @return A list containing one or more elements \code{rendered} (the path to the rendered diff file, if \code{show="rendered"}), \code{intermediate} (the path to the intermediate file, if \code{show="rendered"} and \code{keep_intermediate = TRUE}), and \code{raw} (if \code{show="raw"})
+#' @return A list containing one or more elements \code{rendered} (the path to the rendered diff file, if \code{show="rendered"}), \code{intermediate} (the path to the intermediate file, if \code{keep_intermediate = TRUE}), and \code{raw} (if \code{show="raw"})
 #'
 #' The path to the rendered file showing the differences
 #'
@@ -116,26 +116,27 @@ diff_rmd <- function(current_file, reference_file = "HEAD", show = "raw", output
         stop("unsupported output_format: ", output_format)
     }
 
-    if (show == "raw") {
-        ## write diffout to file along with suitable HTML scaffolding
-        intfile <- tempfile(fileext = ".html")
-    } else {
-        intfile <- tempfile()
-    }
+    intfile <- tempfile()
     con <- file(intfile, "wt")
     if (show == "raw") {
-        ## TODO make this nicer and don't write html tags manually like this
-        ## do as markdown file with output: html_document: includes: before_body: in the YAML to include the diffs file
-        ## include styles
+        ## build markdown template
+        diffs_html_file <- tempfile(fileext = ".html")
+        con2 <- file(diffs_html_file, "wt")
+        cat("<pre id = \"diffcontent\">\n", file = con2)
+        cat(diffout, sep = "\n", file = con2, append = TRUE)
+        cat("</pre>\n", file = con2, append = TRUE)
+        close(con2)
+        cat(c("---", "output:", "  html_document:", "    includes:", paste0("      before_body: ", diffs_html_file), "---"), sep = "\n", file = con)
         if (!is.null(css) && !all(!nzchar(css))) {
-            cat(c("<style>", css, "</style>"), sep = "\n", file = con, append = TRUE)
+            cat(c("\n<style>", css, "</style>"), sep = "\n", file = con, append = TRUE)
         }
-        ## and the content
-        cat("<pre id = \"diffcontent\">\n", file = con, append = TRUE)
-        cat(diffout, sep = "\n", file = con, append = TRUE)
-        cat("</pre>\n", file = con, append = TRUE)
         close(con)
-        out <- list(raw = intfile)
+        out <- list(raw = rmarkdown::render(intfile, output_format = output_format, quiet = quiet))
+        if (keep_intermediate) {
+            out <- c(out, list(intermediate = intfile))
+        } else {
+            unlink(intfile)
+        }
     } else {
         ## rendered output
         writeLines(diffout, con = con)
