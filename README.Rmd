@@ -42,20 +42,25 @@ reference_file <- system.file("extdata/CheatSheet.Rmd", package = "reviewer")
 ```{r exfile2, echo = FALSE}
 ## for demo purposes, just take the first few lines of these files
 tempfile1 <- tempfile()
-writeLines(head(readLines(modified_file), 12), con = tempfile1)
+writeLines(head(readLines(modified_file), 14), con = tempfile1)
 modified_file <- tempfile1
 tempfile2 <- tempfile()
 writeLines(head(readLines(reference_file), 12), con = tempfile2)
 reference_file <- tempfile2
 ```
 
-\[Placeholder: output to go here\]
-
 Compare:
 
 ```{r dodiff, eval = FALSE}
 library(reviewer)
 result <- diff_rmd(modified_file, reference_file)
+```
+
+```{r dodiff-hidden, echo = FALSE}
+## some minor trickery to make the rendered output appear properly in the README.md
+library(reviewer)
+result <- diff_rmd(modified_file, reference_file, escape_code_chunks = TRUE)
+htmltools::includeHTML(result)
 ```
 
 We can also compare the current version of a document to a previous version in stored in a git repository. (These examples are not run here).

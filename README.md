@@ -36,14 +36,42 @@ modified_file <- system.file("extdata/CheatSheet-modified.Rmd", package = "revie
 reference_file <- system.file("extdata/CheatSheet.Rmd", package = "reviewer")
 ```
 
-\[Placeholder: output to go here\]
-
 Compare:
 
 ``` r
 library(reviewer)
 result <- diff_rmd(modified_file, reference_file)
 ```
+
+<!--html_preserve-->
+
+<style>.del { background-color: SandyBrown; } .ins{ background-color: PaleGreen; }</style>
+
+<style>#diffcontent { white-space: pre-wrap;       /* css-3 */
+white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+white-space: -pre-wrap;      /* Opera 4-6 */
+white-space: -o-pre-wrap;    /* Opera 7 */
+word-wrap: break-word;       /* Internet Explorer 5.5+ */
+</style>
+
+<pre id = "diffcontent">
+---
+title: "Git Cheat Sheet"
+author: "Amy Stringer"
+date: "06/01/2018"
+output: pdf_document
+---
+
+<ins class="ins">&lt;!-- this file has been edited just for demonstration purposes within the reviewer package --&gt;</ins>
+
+\`\`\`{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = <del class="del">TRUE)</del><ins class="ins">TRUE, warning = FALSE)</ins>
+\`\`\`
+
+Git is a type of version control software that stores the history of changes made to files in a particular repository. <del class="del">Contained within is</del><ins class="ins">This document contains</ins> a brief rundown of the main commands used within the terminal to run git from your personal computer. Towards the end there will be details on how to use git to collaborate with <del class="del">others on files by</del><ins class="ins">other people</ins> using GitHub.
+</pre>
+
+<!--/html_preserve-->
 
 We can also compare the current version of a document to a previous
 version in stored in a git repository. (These examples are not run
