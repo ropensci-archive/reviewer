@@ -4,13 +4,14 @@
 \alias{diff_rmd}
 \title{Render the differences between two rmarkdown files}
 \usage{
-diff_rmd(file_before = "HEAD", file_after, output_format = "html_document",
-  keep_intermediate = FALSE, quiet = TRUE)
+diff_rmd(current_file, reference_file = "HEAD",
+  output_format = "html_document", keep_intermediate = FALSE,
+  quiet = TRUE)
 }
 \arguments{
-\item{file_before}{string: path to file before changes}
+\item{current_file}{string: path to file after changes}
 
-\item{file_after}{string: path to file after changes}
+\item{reference_file}{string: path to file before changes}
 
 \item{output_format}{string: format of the output file (currently only \code{"html"})}
 
@@ -26,7 +27,7 @@ Render the differences between two rmarkdown files
 }
 \examples{
 \dontrun{
-  result <- diff_rmd(my_file_before, my_file_after)
+  result <- diff_rmd(my_current_file, my_reference_file)
   browseURL(result$rendered)
 }
 
