@@ -1,0 +1,76 @@
+---
+title: "Git Cheat Sheet"
+author: "Amy Stringer"
+date: "06/01/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<span style="color:orange">\textbf{Git is a type of version control software}</span> that stores the history of changes made to files in a particular repository. Contained within is a brief rundown of the main commands used within the terminal to run git from your personal computer. Towards the end there will be details on how to use git to collaborate with others on files by using gitHub. 
+
+# Some lingo 
+
+The **working directory** is the folder on your local machine that you are making changes in. 
+
+The **staging area** is the middle ground between the working directory and the git repository. You *stage* changes to a file if you plan to add them to the repo.
+
+The **repository** is where all files already committed go. You can take files from the repository and edit them, but the respository will only hold the unedited version until your changes are staged and then commited. 
+
+**Untracked files** are files that exist in your working directory that have not yet been added to the repository and hence any changes made to this will not be tracked and you will not have access to previous versions. 
+
+# Using git on your local computer only 
+
+All commands listed below can be run through terminal provided git is installed on your local computer. If git is not installed, you can download it from [the git website](https://git-scm.com/downloads). If you have a windows computer, you should make sure to select that gitbash is included in your download, this will act as your terminal. 
+
+## git Functions 
+
+`git init` initialises a git repository. That is, if you run `git init` it will add a file called `.git` to your directory which contains all the back of house information, and sets up your repository. You will not need to access this file, but if you want to check that your initialisation worked, type `ls -a` into terminal and check that it is there. 
+
+`git status` shows you the status of your repository. If you run this immediately after initiallising it will tell you that you have not yet made any commits to you repository, that is, your repository is empty. While in this state a repository cannot be cloned (git reccomends adding a README file to each newly initialised repo to describe the project, though it is not necessary if you already have files to commit to your repo.) `git status` will also display any untracked files that currently exist in your working directory. 
+
+`git clone` clones an already existing repository, generally through a link from github or a file path to another folder on your local computer. This copies everything within that repository including the commit history so you can see any changes made to the repo by other people. 
+
+`git log` prints a list of the previous commits to the repository. The latest comit is the top entry, and each commit should have a unique commit ID and a commit message detailing the change made 
+
+`git diff` allows you to look at differences between different versions of a file. Though it can be used in different ways to investigate different things 
+
+- `git diff commit1 commit2` looks at the differences between two separate commits in the history 
+- `git diff --staged` looks at the differences between the a file in the staging area and the last known commit of that file
+- `git diff` with no arguments looks at differences between the working directory and the staging area 
+
+`git checkout` allows you to check out a previous commit, which means if any files in the folder are now opened,   
+
+`git branch add branchname` creates a new branch called branchname. 
+
+`git branch` with no arguments shows a list of the known branches, with the currently checked out branch marked with an asterisk 
+
+`git merge branch1 branch2` merges two branches into each other for the most updated version of the code. For example, the master branch on a game may have continued receiving updates while another collaborator worked on another branch `addcolor`. Once the collaborator has the colour code working, they will want to merge this back with the master branch without erasing any of the changes made to the master since the `addcolor` branch was checked out. This is what git merge does. There was be conflicts, and when this happens, you will need to correct them manually. Git will show you where the conflicts are. This is a tricky part of git, and likely won't be needed much, but contact Amy is there are any issues. 
+ 
+`git add filename` will add a file to the staging area once you have made edits. This is typically done once you intend to commit changes. 
+
+`git commit` commits all files that are currently in the staging area to the repository. You must provide a message explaining what is contained in that particular commit. That is, what changed. These messages should be simple and descriptive, for example 'change distance calculation' and should be made after each new addition to the code in order for us to effectively use version control. Be careful here, this is equivalent to saving your work, only manually. Saving too little could results in an error being introduced that is quite hard to find in amongst a large number of changes, but committing too much could make it hard to pinpoint which commit introduced an error. 
+
+Here is a random additional sentence.
+
+# Using Git for Collaboration 
+
+Using github allows you to set up a remote repository online that you can push data to or pull data from. If you clone a repository from github, that means that the repository you cloned is automatically set up as a remote from your local device. Otherwise, in order to access a new repo from github, you can set the remote manually and then pull from the repo, and this will have the same effect as cloning 
+
+## Some functions 
+
+`git remote` with no arguments lists any remotes you currently have by name 
+
+`git remote add https://link` will add a remote to your local device where that remote repository can be found at http://link. This means you can save to an online repo that others can access once you have added files or made changes to files on you local computer. Typically the computer you are working from will automatically create the branch `master`, and automatically set your remote to be called `origin`.
+
+`git pull origin master` means pull all data from origin (your remote) and store it in master (you master branch on you local computer). This downloads the most recent copy of all files within your repository, including the commits made by other collaborators.  
+
+`git push origin master` means push to origin from the master branch. This has the opposite effect of the previous command, and this should be used each time you make a new commit, so that anyone else using the repo can see your changes right away. 
+
+
+
+
+
+
