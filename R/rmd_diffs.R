@@ -21,7 +21,9 @@ diff_rmd <- function(current_file, reference_file = "HEAD", output_format = "htm
 
     debug <- FALSE ## just for internal debugging use
 
-    ## TODO: test that we can find the git executable
+    ## test that we can find the git executable
+    tryCatch(system2("git", "--version", stderr = TRUE, stdout = TRUE), error = function(e)
+        stop("Cannot find the git executable: is it on your system path?"))
 
     ## check that we are in a git repository
     in_git_repo <- tryCatch({git2r::status(); TRUE}, error = function(e) FALSE)
