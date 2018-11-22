@@ -23,6 +23,9 @@ diff_rmd <- function(current_file, reference_file = "HEAD", output_format = "htm
 
     ## TODO: test that we can find the git executable
 
+    ## check that we are in a git repository
+    in_git_repo <- tryCatch({git2r::status(); TRUE}, error = function(e) FALSE)
+
     ## construct the git diff call
     ## we always expect current_file to be an actual file
     if (!file.exists(current_file)) {
@@ -37,6 +40,11 @@ diff_rmd <- function(current_file, reference_file = "HEAD", output_format = "htm
         if (file.exists(reference_file)) {
             index_str <- "--no-index"
         }
+    }
+    if (is.null(index_str)) {
+        ## we think that the reference_file argument is a git reference
+        ## are we in a git repo?
+        if (!in_git_repo) stop("The 'reference_file' parameter appears to be a git reference, but your working directory does not seem to be a git repository")
     }
     ## rather than suppressWarnings, should capture warnings and then just screen out the one we want to ignore
     args <- c("diff", "-U2000", "--word-diff", "--minimal", index_str, reference_file, current_file)
