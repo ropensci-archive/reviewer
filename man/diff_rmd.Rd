@@ -13,7 +13,7 @@ diff_rmd(current_file, reference_file = "HEAD",
 
 \item{reference_file}{string: path to file before changes}
 
-\item{output_format}{string: format of the output file (currently only \code{"html"})}
+\item{output_format}{string: format of the output file (currently only \code{"html_document"})}
 
 \item{keep_intermediate}{logical: keep the intermediate rmarkdown file (which contains the marked-up differences)}
 

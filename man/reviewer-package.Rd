@@ -9,7 +9,14 @@
 What the package does (one paragraph).
 }
 \author{
-\strong{Maintainer}: First Last \email{first.last@example.com}
+\strong{Maintainer}: Amy Stringer \email{amy.stringer@me.com}
+
+Authors:
+\itemize{
+  \item Ben Raymond
+  \item Mark Dulhunty
+  \item Laura de Jong
+}
 
 }
 \keyword{internal}
