@@ -10,6 +10,7 @@ enable_html_annotation <- function() {
     rstudioapi::insertText(Inf,
       '<script src="https://hypothes.is/embed.js" async></script>'
   )
+    message("Hypothes.is is inserted at the bottom of your markdown document")
   } else {
     message("Time for a coffee, you hit the button twice. ")
   }
