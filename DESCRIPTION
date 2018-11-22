@@ -2,11 +2,11 @@ Package: reviewer
 Version: 0.0.0.9000
 Title: What the Package Does (One Line, Title Case)
 Description: What the package does (one paragraph).
-Authors@R: c(person("Ben", "Raymond", "first.last@example.com", c("aut", "cre")),
-person("Mark", "Dulhunty", "first.last@example.com", c("aut")), 
-person("Amy", "Stringer", "first.last@example.com", c("aut")), 
-person("Laura", "de Jong", "first.last@example.com", c("aut")))
-License: What license it uses
+Authors@R: c(person("Ben", "Raymond", c("aut", "cre")),
+             person("Mark", "Dulhunty", c("aut")), 
+             person("Amy", "Stringer", c("aut")), 
+             person("Laura", "de Jong", c("aut")))
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 ByteCompile: true
