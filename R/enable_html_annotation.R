@@ -5,7 +5,7 @@
 #'
 #' @export
 enable_html_annotation <- function() {
-  rstudioapi::insertText(
+  rstudioapi::insertText(Inf,
     '<script src="https://hypothes.is/embed.js" async></script>'
   )
 }
