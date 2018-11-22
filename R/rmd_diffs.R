@@ -75,6 +75,10 @@ diff_rmd <- function(current_file, reference_file = "HEAD", output_format = "htm
     ## strip the headers, which are the first 5 lines
     diffout <- diffout[seq(from = 6, to = length(diffout), by = 1)]
 
+    ## escape HTML content now, so that in the final document it won't be interpreted as actual HTML
+    ## do this before adding our HTML markup on changes, otherwise those wouldn't be interpreted as HTML either
+    diffout <- htmltools::htmlEscape(diffout)
+    
     if (output_format %in% c("html_document")) {
         ## mark up the insert/deletes as HTML markup
         diffout <- gsub("[-", "<del class=\"del\">", diffout, fixed = TRUE)
@@ -108,7 +112,6 @@ diff_rmd <- function(current_file, reference_file = "HEAD", output_format = "htm
     cat("word-wrap: break-word;       /* Internet Explorer 5.5+ */\n", file = con, append = TRUE)
     cat("</style>\n", file = con, append = TRUE)
     cat("<pre id = \"diffcontent\">\n", file = con, append = TRUE)
-    ## TODO: need to escape all HTML content in diffout, else it will be interpreted as HTML
     cat(diffout, file = con, sep = "\n", append = TRUE)
     cat("</pre>\n", file = con, append = TRUE)
     cat("</body>\n</html>\n", file = con, append = TRUE)
