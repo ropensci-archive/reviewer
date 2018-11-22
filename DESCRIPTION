@@ -2,10 +2,10 @@ Package: reviewer
 Version: 0.0.0.9000
 Title: What the Package Does (One Line, Title Case)
 Description: What the package does (one paragraph).
-Authors@R: c(person("Ben", "Raymond", c("aut", "cre")),
-             person("Mark", "Dulhunty", c("aut")), 
-             person("Amy", "Stringer", c("aut")), 
-             person("Laura", "de Jong", c("aut")))
+Authors@R: c(person("Ben", "Raymond", role = c("aut", "cre")),
+             person("Mark", "Dulhunty", role = c("aut")), 
+             person("Amy", "Stringer", role = c("aut")), 
+             person("Laura", "de Jong", role = c("aut")))
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
