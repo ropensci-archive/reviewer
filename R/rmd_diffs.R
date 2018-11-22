@@ -2,7 +2,8 @@
 #'
 #' @param current_file string: path to file after changes
 #' @param reference_file string: path to file before changes
-#' @param output_format string: format of the output file (currently only \code{"html_document"})
+#' @param output_format string: format of the output file (currently only \code{"html"})
+#' @param escape_code_chunks logical: escape three-backtick code chunks?
 #'
 #' @return The path to the rendered file showing the differences
 #'
@@ -13,8 +14,8 @@
 #' }
 #'
 #' @export
-diff_rmd <- function(current_file, reference_file = "HEAD", output_format = "html_document") {
-    output_format <- match.arg(tolower(output_format), c("html_document"))##, "pdf_document"))
+diff_rmd <- function(current_file, reference_file = "HEAD", output_format = "html", escape_code_chunks = FALSE) {
+    output_format <- match.arg(tolower(output_format), c("html"))
     ## or get default document format from rmarkdown::default_output_format(current_file)$name
 
     debug <- FALSE ## just for internal debugging use
@@ -23,8 +24,12 @@ diff_rmd <- function(current_file, reference_file = "HEAD", output_format = "htm
     tryCatch(system2("git", "--version", stderr = TRUE, stdout = TRUE), error = function(e)
         stop("Cannot find the git executable: is it on your system path?"))
 
-    ## check that we are in a git repository
-    in_git_repo <- tryCatch({git2r::status(); TRUE}, error = function(e) FALSE)
+    ## are we in a git repository?
+    in_git_repo <- tryCatch({
+        suppressWarnings(res <- system2("git", "status", stderr = TRUE, stdout = TRUE))
+        status <- attr(res, "status")
+        if (is.null(status) || status == 0L) TRUE else FALSE
+    }, error = function(e) FALSE)
 
     ## construct the git diff call
     ## we always expect current_file to be an actual file
@@ -78,15 +83,16 @@ diff_rmd <- function(current_file, reference_file = "HEAD", output_format = "htm
     ## escape HTML content now, so that in the final document it won't be interpreted as actual HTML
     ## do this before adding our HTML markup on changes, otherwise those wouldn't be interpreted as HTML either
     diffout <- htmltools::htmlEscape(diffout)
-    
-    if (output_format %in% c("html_document")) {
+    if (escape_code_chunks) diffout <- gsub("^```", "\\\\`\\\\`\\\\`", diffout)
+
+    if (output_format %in% c("html")) {
         ## mark up the insert/deletes as HTML markup
         diffout <- gsub("[-", "<del class=\"del\">", diffout, fixed = TRUE)
         diffout <- gsub("-]", "</del>", diffout, fixed = TRUE)
         diffout <- gsub("{+", "<ins class=\"ins\">", diffout, fixed = TRUE)
         diffout <- gsub("+}", "</ins>", diffout, fixed = TRUE)
-    } else if (output_format == "pdf_document") {
-        stop("pdf_document format not supported yet")
+    } else if (output_format == "pdf") {
+        stop("pdf format not supported yet")
         ## needs xcolor package available within LaTeX
         diffout <- gsub("[-", "\\textcolor{red}{", diffout, fixed = TRUE)
         diffout <- gsub("-]", "}", diffout, fixed = TRUE)
@@ -101,11 +107,10 @@ diff_rmd <- function(current_file, reference_file = "HEAD", output_format = "htm
     con <- file(intfile, "wt")
     on.exit(close(con))
     ## TODO make this nicer and don't write html tags manually like this
-    cat("<html>\n<body>\n", file = con)
     ## styles for changes
-    cat("<style>.del { background-color: SandyBrown; } .ins{ background-color: PaleGreen; }</style>\n", file = con, append = TRUE)
+    cat("<style>.del { background-color: SandyBrown; } .ins{ background-color: PaleGreen; }</style>\n", file = con)
     ## styles to make <pre> tags line-wrap
-    cat("<style>pre { white-space: pre-wrap;       /* css-3 */\n", file = con, append = TRUE)
+    cat("<style>#diffcontent { white-space: pre-wrap;       /* css-3 */\n", file = con, append = TRUE)
     cat("white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */\n", file = con, append = TRUE)
     cat("white-space: -pre-wrap;      /* Opera 4-6 */\n", file = con, append = TRUE)
     cat("white-space: -o-pre-wrap;    /* Opera 7 */\n", file = con, append = TRUE)
@@ -114,6 +119,5 @@ diff_rmd <- function(current_file, reference_file = "HEAD", output_format = "htm
     cat("<pre id = \"diffcontent\">\n", file = con, append = TRUE)
     cat(diffout, file = con, sep = "\n", append = TRUE)
     cat("</pre>\n", file = con, append = TRUE)
-    cat("</body>\n</html>\n", file = con, append = TRUE)
     intfile
 }

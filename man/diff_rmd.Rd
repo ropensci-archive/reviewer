@@ -4,18 +4,20 @@
 \alias{diff_rmd}
 \title{Render the differences between two rmarkdown files}
 \usage{
-diff_rmd(current_file, reference_file = "HEAD",
-  output_format = "html_document")
+diff_rmd(current_file, reference_file = "HEAD", output_format = "html",
+  escape_code_chunks = FALSE)
 }
 \arguments{
 \item{current_file}{string: path to file after changes}
 
 \item{reference_file}{string: path to file before changes}
 
-\item{output_format}{string: format of the output file (currently only \code{"html_document"})}
+\item{output_format}{string: format of the output file (currently only \code{"html"})}
+
+\item{escape_code_chunks}{logical: escape three-backtick code chunks?}
 }
 \value{
-A list containing elements \code{rendered} (the path to the rendered diff file) and (if \code{keep_intermediate = TRUE}) \code{intermediate} (the path to the intermediate file)
+The path to the rendered file showing the differences
 }
 \description{
 Render the differences between two rmarkdown files
@@ -23,7 +25,7 @@ Render the differences between two rmarkdown files
 \examples{
 \dontrun{
   result <- diff_rmd(my_current_file, my_reference_file)
-  browseURL(result$rendered)
+  browseURL(result)
 }
 
 }
