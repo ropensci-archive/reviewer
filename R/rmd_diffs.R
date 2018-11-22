@@ -18,11 +18,23 @@ diff_rmd <- function(file_before, file_after, output_format = "html_document", k
     output_format <- match.arg(tolower(output_format), c("html_document"))#, "pdf_document"))
     ## or get default document format from rmarkdown::default_output_format(file_before)$name
 
-    diffout <- system2("git", c("diff", "-U2000", "--word-diff", "--minimal", "--no-index", file_before, file_after), stdout = TRUE)
+    ## rather than suppressWarnings, should capture warnings and then just screen out the one we want to ignore
+    suppressWarnings(diffout <- system2("git", c("diff", "-U2000", "--word-diff", "--minimal", "--no-index", file_before, file_after), stdout = TRUE, stderr = TRUE))
     ## -U2000 specifies how much context is included around each individual change
     ## we want the whole document here so it needs to be large (could count lines in file?)
 
-    ## todo: catch errors directly from system2 call
+    ## check what we got
+    if ((is.null(attr(diffout, "status")) || identical(attr(diffout, "status"), 0L)) && length(diffout) < 1) {
+        ## no output but status was OK, so there are no differences between the files
+        message("Files are identical")
+        return(NULL)
+    }
+    ## status of 1 means that it ran successfully but there were no differences
+    ## status 2 means there was an error 
+    if (!identical(attr(diffout, "status"), 1L)) {
+        stop("error generating file differences")
+    }
+
     if (length(diffout) < 6) {
         ## no output
         stop("error generating file differences")
