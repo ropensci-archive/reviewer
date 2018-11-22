@@ -2,3 +2,4 @@
 ^README\.Rmd$
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^README.html$
