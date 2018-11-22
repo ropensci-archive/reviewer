@@ -2,14 +2,14 @@
 title: "Git Cheat Sheet"
 author: "Amy Stringer"
 date: "06/01/2018"
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
 
-<span style="color:orange">\textbf{Git is a type of version control software}</span> that stores the history of changes made to files in a particular repository. Contained within is a brief rundown of the main commands used within the terminal to run git from your personal computer. Towards the end there will be details on how to use git to collaborate with others on files by using gitHub. 
+Git is a type of version control software that stores the history of changes made to files in a particular repository. This document contains a brief rundown of the main commands used within the terminal to run git from your personal computer. Towards the end there will be details on how to use git to collaborate with other people using GitHub.
 
 # Some lingo 
 
