@@ -12,6 +12,7 @@ Imports:
     purrr,
     tidyr,
     stringr,
-    assertthat
+    assertthat,
+    rstudioapi
 Suggests: 
     testthat

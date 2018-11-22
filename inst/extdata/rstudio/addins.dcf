@@ -1,0 +1,4 @@
+Name: Insert html annotation js snippet
+Description: Inserts js snippet to enable html annotations using Hypothes.is
+Binding: enable_html_annotation
+Interactive: false
