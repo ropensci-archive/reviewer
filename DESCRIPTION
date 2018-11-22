@@ -11,6 +11,7 @@ Encoding: UTF-8
 LazyData: true
 ByteCompile: true
 Imports:
+    assertthat,
     htmltools,
     rmarkdown,
     rstudioapi
