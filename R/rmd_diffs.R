@@ -2,11 +2,16 @@
 #'
 #' @param current_file string: path to file after changes
 #' @param reference_file string: path to file before changes
-#' @param output_format string: format of the output file (currently only \code{"html"})
+#' @param show string: \code{"raw"} (show differences in the raw rmarkdown file) or \code{"rendered"} (show differences in the rendered output)
+#' @param output_format string: format of the output file (currently only \code{"html_document"})
+#' @param keep_intermediate logical: keep the intermediate rmarkdown file? (Only applicable if \code{show="rendered"})
+#' @param quiet logical: if \code{TRUE}, suppress pandoc output (Only applicable if \code{show="rendered"})
 #' @param css character vector: css specification to apply to changed sections. Defaults to \code{diff_rmd_css()}; specify \code{NULL} to not include a \code{<style>} section in the output
-#' @param escape_code_chunks logical: escape three-backtick code chunks?
+# @param escape_code_chunks logical: escape three-backtick code chunks?
 #'
-#' @return The path to the rendered file showing the differences
+#' @return A list containing one or more elements \code{rendered} (the path to the rendered diff file, if \code{show="rendered"}), \code{intermediate} (the path to the intermediate file, if \code{show="rendered"} and \code{keep_intermediate = TRUE}), and \code{raw} (if \code{show="raw"})
+#'
+#' The path to the rendered file showing the differences
 #'
 #' @examples
 #' \dontrun{
@@ -15,9 +20,15 @@
 #' }
 #'
 #' @export
-diff_rmd <- function(current_file, reference_file = "HEAD", output_format = "html", css = diff_rmd_css(), escape_code_chunks = FALSE) {
-    output_format <- match.arg(tolower(output_format), c("html"))
+diff_rmd <- function(current_file, reference_file = "HEAD", show = "raw", output_format = "html_document", keep_intermediate = FALSE, quiet = TRUE, css = diff_rmd_css()) {
+    ## , escape_code_chunks = FALSE
+    assert_that(is.string(output_format))
+    output_format <- match.arg(tolower(output_format), c("html_document"))
     ## or get default document format from rmarkdown::default_output_format(current_file)$name
+    assert_that(is.string(show))
+    show <- match.arg(tolower(show), c("raw", "rendered"))
+    assert_that(is.flag(keep_intermediate), !is.na(keep_intermediate))
+    assert_that(is.flag(quiet), !is.na(quiet))
 
     debug <- FALSE ## just for internal debugging use
 
@@ -81,18 +92,20 @@ diff_rmd <- function(current_file, reference_file = "HEAD", output_format = "htm
     ## strip the headers, which are the first 5 lines
     diffout <- diffout[seq(from = 6, to = length(diffout), by = 1)]
 
-    ## escape HTML content now, so that in the final document it won't be interpreted as actual HTML
-    ## do this before adding our HTML markup on changes, otherwise those wouldn't be interpreted as HTML either
-    diffout <- htmltools::htmlEscape(diffout)
-    if (escape_code_chunks) diffout <- gsub("^```", "\\\\`\\\\`\\\\`", diffout)
+    if (show == "raw") {
+        ## escape HTML content now, so that in the final document it won't be interpreted as actual HTML
+        ## do this before adding our HTML markup on changes, otherwise those wouldn't be interpreted as HTML either
+        diffout <- htmltools::htmlEscape(diffout)
+        ##if (escape_code_chunks) diffout <- gsub("^```", "\\\\`\\\\`\\\\`", diffout)
+    }
 
-    if (output_format %in% c("html")) {
+    if (output_format %in% c("html_document")) {
         ## mark up the insert/deletes as HTML markup
         diffout <- gsub("[-", "<del class=\"del\">", diffout, fixed = TRUE)
         diffout <- gsub("-]", "</del>", diffout, fixed = TRUE)
         diffout <- gsub("{+", "<ins class=\"ins\">", diffout, fixed = TRUE)
         diffout <- gsub("+}", "</ins>", diffout, fixed = TRUE)
-    } else if (output_format == "pdf") {
+    } else if (output_format %in% c("pdf", "pdf_document")) {
         stop("pdf format not supported yet")
         ## needs xcolor package available within LaTeX
         diffout <- gsub("[-", "\\textcolor{red}{", diffout, fixed = TRUE)
@@ -103,20 +116,38 @@ diff_rmd <- function(current_file, reference_file = "HEAD", output_format = "htm
         stop("unsupported output_format: ", output_format)
     }
 
-    ## write diffout to file along with suitable HTML scaffolding
-    intfile <- tempfile(fileext = ".html")
-    con <- file(intfile, "wt")
-    on.exit(close(con))
-    ## TODO make this nicer and don't write html tags manually like this
-    ## include styles
-    if (!is.null(css) && !all(!nzchar(css))) {
-        cat(c("<style>", css, "</style>"), sep = "\n", file = con, append = TRUE)
+    if (show == "raw") {
+        ## write diffout to file along with suitable HTML scaffolding
+        intfile <- tempfile(fileext = ".html")
+    } else {
+        intfile <- tempfile()
     }
-    ## and the content
-    cat("<pre id = \"diffcontent\">\n", file = con, append = TRUE)
-    cat(diffout, sep = "\n", file = con, append = TRUE)
-    cat("</pre>\n", file = con, append = TRUE)
-    intfile
+    con <- file(intfile, "wt")
+    if (show == "raw") {
+        ## TODO make this nicer and don't write html tags manually like this
+        ## do as markdown file with output: html_document: includes: before_body: in the YAML to include the diffs file
+        ## include styles
+        if (!is.null(css) && !all(!nzchar(css))) {
+            cat(c("<style>", css, "</style>"), sep = "\n", file = con, append = TRUE)
+        }
+        ## and the content
+        cat("<pre id = \"diffcontent\">\n", file = con, append = TRUE)
+        cat(diffout, sep = "\n", file = con, append = TRUE)
+        cat("</pre>\n", file = con, append = TRUE)
+        close(con)
+        out <- list(raw = intfile)
+    } else {
+        ## rendered output
+        writeLines(diffout, con = con)
+        close(con)
+        out <- list(rendered = rmarkdown::render(intfile, output_format = output_format, quiet = quiet))
+        if (keep_intermediate) {
+            out <- c(out, list(intermediate = intfile))
+        } else {
+            unlink(intfile)
+        }
+    }
+    out
 }
 
 #' @rdname diff_rmd

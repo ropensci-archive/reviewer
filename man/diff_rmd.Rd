@@ -5,8 +5,9 @@
 \alias{diff_rmd_css}
 \title{Render the differences between two rmarkdown files}
 \usage{
-diff_rmd(current_file, reference_file = "HEAD", output_format = "html",
-  css = diff_rmd_css(), escape_code_chunks = FALSE)
+diff_rmd(current_file, reference_file = "HEAD", show = "raw",
+  output_format = "html_document", keep_intermediate = FALSE,
+  quiet = TRUE, css = diff_rmd_css())
 
 diff_rmd_css()
 }
@@ -15,13 +16,19 @@ diff_rmd_css()
 
 \item{reference_file}{string: path to file before changes}
 
-\item{output_format}{string: format of the output file (currently only \code{"html"})}
+\item{show}{string: \code{"raw"} (show differences in the raw rmarkdown file) or \code{"rendered"} (show differences in the rendered output)}
+
+\item{output_format}{string: format of the output file (currently only \code{"html_document"})}
+
+\item{keep_intermediate}{logical: keep the intermediate rmarkdown file? (Only applicable if \code{show="rendered"})}
+
+\item{quiet}{logical: if \code{TRUE}, suppress pandoc output (Only applicable if \code{show="rendered"})}
 
 \item{css}{character vector: css specification to apply to changed sections. Defaults to \code{diff_rmd_css()}; specify \code{NULL} to not include a \code{<style>} section in the output}
-
-\item{escape_code_chunks}{logical: escape three-backtick code chunks?}
 }
 \value{
+A list containing one or more elements \code{rendered} (the path to the rendered diff file, if \code{show="rendered"}), \code{intermediate} (the path to the intermediate file, if \code{show="rendered"} and \code{keep_intermediate = TRUE}), and \code{raw} (if \code{show="raw"})
+
 The path to the rendered file showing the differences
 }
 \description{
