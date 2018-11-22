@@ -74,14 +74,20 @@ Git is a type of version control software that stores the history of changes mad
 </div>
 
 We can also compare the current version of a document to a previous
-version in stored in a git repository. (These examples are not run here)
+version in stored in a git repository. (These examples are not run
+here).
+
+If a `reference_file` argument is not provided, by default the
+`modified_file` will be compared to the most recent copy in the git
+repo:
 
 ``` r
-## by default the modified_file will be compared to the most recent copy
-##  in the git repo
 result <- diff_rmd(modified_file)
+```
 
-## or we can compare it to how it appeared in the git repository after a
-##  particular commit (here, the commit with reference 750ab4)
+Or we can compare it to how it appeared in the git repository after a
+particular commit (here, the commit with reference 750ab4):
+
+``` r
 result <- diff_rmd(modified_file, "750ab4")
 ```

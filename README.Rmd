@@ -55,6 +55,7 @@ Compare:
 library(reviewer)
 result <- diff_rmd(modified_file, reference_file)
 ```
+
 <style>
 pre {
  white-space: pre-wrap;       /* css-3 */
@@ -67,8 +68,7 @@ pre {
 <div style="border:1px solid black; padding: 12px;">
 <pre>
 ```{r dodiff_hidden, echo = FALSE, results = "asis"}
-## some trickery to display the modified rmarkdown
-## render it to markdown document and include that
+## some trickery to display the modified rmarkdown in the README
 library(reviewer)
 result <- diff_rmd(modified_file, reference_file, keep_intermediate = TRUE)
 txt <- readLines(result$intermediate)
@@ -77,15 +77,17 @@ cat(txt, sep = "\n")
 </pre>
 </div>
 
-We can also compare the current version of a document to a previous version in stored in a git repository. (These examples are not run here)
+We can also compare the current version of a document to a previous version in stored in a git repository. (These examples are not run here).
+
+If a `reference_file` argument is not provided, by default the `modified_file` will be compared to the most recent copy in the git repo:
 
 ```{r diff-ex-2, eval = FALSE}
-## by default the modified_file will be compared to the most recent copy
-##  in the git repo
 result <- diff_rmd(modified_file)
+```
 
-## or we can compare it to how it appeared in the git repository after a
-##  particular commit (here, the commit with reference 750ab4)
+Or we can compare it to how it appeared in the git repository after a particular commit (here, the commit with reference 750ab4):
+
+```{r diff-ex-3, eval = FALSE}
 result <- diff_rmd(modified_file, "750ab4")
 ```
 
