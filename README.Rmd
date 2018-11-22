@@ -1,17 +1,24 @@
+---
+output: github_document
+---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-reviewer
-========
 
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+# reviewer
 Improving the track changes and reviewing experience in R markdown
 
-Important note
---------------
-
+## Important note
 In order to use the functionality it is needed to sign-up at [the Hypothe.is website](https://hypothes.is/signup)
 
-Installation
-------------
+## Installation
 
 You can install the released version of reviewer from [GitHub](https://github.com/ropenscilabs/reviewer) with:
 
