@@ -8,6 +8,7 @@ output: pdf_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
+<!-- this file has been edited just for demonstration purposes within the reviewer package -->
 
 Git is a type of version control software that stores the history of changes made to files in a particular repository. This document contains a brief rundown of the main commands used within the terminal to run git from your personal computer. Towards the end there will be details on how to use git to collaborate with other people using GitHub.
 
