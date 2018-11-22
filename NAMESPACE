@@ -2,4 +2,5 @@
 
 export(diff_rmd)
 export(diff_rmd_addin)
+export(diff_rmd_css)
 export(enable_html_annotation)

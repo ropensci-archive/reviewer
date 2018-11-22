@@ -2,10 +2,13 @@
 % Please edit documentation in R/rmd_diffs.R
 \name{diff_rmd}
 \alias{diff_rmd}
+\alias{diff_rmd_css}
 \title{Render the differences between two rmarkdown files}
 \usage{
 diff_rmd(current_file, reference_file = "HEAD", output_format = "html",
-  escape_code_chunks = FALSE)
+  css = diff_rmd_css(), escape_code_chunks = FALSE)
+
+diff_rmd_css()
 }
 \arguments{
 \item{current_file}{string: path to file after changes}
@@ -13,6 +16,8 @@ diff_rmd(current_file, reference_file = "HEAD", output_format = "html",
 \item{reference_file}{string: path to file before changes}
 
 \item{output_format}{string: format of the output file (currently only \code{"html"})}
+
+\item{css}{character vector: css specification to apply to changed sections. Defaults to \code{diff_rmd_css()}; specify \code{NULL} to not include a \code{<style>} section in the output}
 
 \item{escape_code_chunks}{logical: escape three-backtick code chunks?}
 }

@@ -3,6 +3,7 @@
 #' @param current_file string: path to file after changes
 #' @param reference_file string: path to file before changes
 #' @param output_format string: format of the output file (currently only \code{"html"})
+#' @param css character vector: css specification to apply to changed sections. Defaults to \code{diff_rmd_css()}; specify \code{NULL} to not include a \code{<style>} section in the output
 #' @param escape_code_chunks logical: escape three-backtick code chunks?
 #'
 #' @return The path to the rendered file showing the differences
@@ -14,7 +15,7 @@
 #' }
 #'
 #' @export
-diff_rmd <- function(current_file, reference_file = "HEAD", output_format = "html", escape_code_chunks = FALSE) {
+diff_rmd <- function(current_file, reference_file = "HEAD", output_format = "html", css = diff_rmd_css(), escape_code_chunks = FALSE) {
     output_format <- match.arg(tolower(output_format), c("html"))
     ## or get default document format from rmarkdown::default_output_format(current_file)$name
 
@@ -107,17 +108,25 @@ diff_rmd <- function(current_file, reference_file = "HEAD", output_format = "htm
     con <- file(intfile, "wt")
     on.exit(close(con))
     ## TODO make this nicer and don't write html tags manually like this
-    ## styles for changes
-    cat("<style>.del { background-color: SandyBrown; } .ins{ background-color: PaleGreen; }</style>\n", file = con)
-    ## styles to make <pre> tags line-wrap
-    cat("<style>#diffcontent { white-space: pre-wrap;       /* css-3 */\n", file = con, append = TRUE)
-    cat("white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */\n", file = con, append = TRUE)
-    cat("white-space: -pre-wrap;      /* Opera 4-6 */\n", file = con, append = TRUE)
-    cat("white-space: -o-pre-wrap;    /* Opera 7 */\n", file = con, append = TRUE)
-    cat("word-wrap: break-word;       /* Internet Explorer 5.5+ */\n", file = con, append = TRUE)
-    cat("</style>\n", file = con, append = TRUE)
+    ## include styles
+    if (!is.null(css) && !all(!nzchar(css))) {
+        cat(c("<style>", css, "</style>"), sep = "\n", file = con, append = TRUE)
+    }
+    ## and the content
     cat("<pre id = \"diffcontent\">\n", file = con, append = TRUE)
-    cat(diffout, file = con, sep = "\n", append = TRUE)
+    cat(diffout, sep = "\n", file = con, append = TRUE)
     cat("</pre>\n", file = con, append = TRUE)
     intfile
+}
+
+#' @rdname diff_rmd
+#' @export
+diff_rmd_css <- function() {
+    c(".del { background-color: SandyBrown; } .ins{ background-color: PaleGreen; }",
+      ## styles to make <pre> tags line-wrap
+      "#diffcontent { white-space: pre-wrap;       /* css-3 */",
+      "white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */",
+      "white-space: -pre-wrap;      /* Opera 4-6 */",
+      "white-space: -o-pre-wrap;    /* Opera 7 */",
+      "word-wrap: break-word; }       /* Internet Explorer 5.5+ */")
 }
