@@ -3,19 +3,17 @@
 #' @param current_file string: path to file after changes
 #' @param reference_file string: path to file before changes
 #' @param output_format string: format of the output file (currently only \code{"html_document"})
-#' @param keep_intermediate logical: keep the intermediate rmarkdown file (which contains the marked-up differences)
-#' @param quiet logical: if \code{TRUE}, suppress pandoc output during \code{rmarkdown::render} call
 #'
-#' @return A list containing elements \code{rendered} (the path to the rendered diff file) and (if \code{keep_intermediate = TRUE}) \code{intermediate} (the path to the intermediate file)
+#' @return The path to the rendered file showing the differences
 #'
 #' @examples
 #' \dontrun{
 #'   result <- diff_rmd(my_current_file, my_reference_file)
-#'   browseURL(result$rendered)
+#'   browseURL(result)
 #' }
 #'
 #' @export
-diff_rmd <- function(current_file, reference_file = "HEAD", output_format = "html_document", keep_intermediate = FALSE, quiet = TRUE) {
+diff_rmd <- function(current_file, reference_file = "HEAD", output_format = "html_document") {
     output_format <- match.arg(tolower(output_format), c("html_document"))##, "pdf_document"))
     ## or get default document format from rmarkdown::default_output_format(current_file)$name
 
@@ -83,8 +81,6 @@ diff_rmd <- function(current_file, reference_file = "HEAD", output_format = "htm
         diffout <- gsub("-]", "</del>", diffout, fixed = TRUE)
         diffout <- gsub("{+", "<ins class=\"ins\">", diffout, fixed = TRUE)
         diffout <- gsub("+}", "</ins>", diffout, fixed = TRUE)
-        ## and append stylesheet
-        diffout <- c(diffout, "<style>.del { background-color: SandyBrown; } .ins{ background-color: PaleGreen; }")
     } else if (output_format == "pdf_document") {
         stop("pdf_document format not supported yet")
         ## needs xcolor package available within LaTeX
@@ -96,17 +92,25 @@ diff_rmd <- function(current_file, reference_file = "HEAD", output_format = "htm
         stop("unsupported output_format: ", output_format)
     }
 
-    ## write diffout to file
-    intfile <- tempfile()
+    ## write diffout to file along with suitable HTML scaffolding
+    intfile <- tempfile(fileext = ".html")
     con <- file(intfile, "wt")
-    writeLines(diffout, con = con)
-    close(con)
-
-    out <- list(rendered = rmarkdown::render(intfile, output_format = output_format, quiet = quiet))
-    if (keep_intermediate) {
-        out <- c(out, list(intermediate = intfile))
-    } else {
-        unlink(intfile)
-    }
-    out
+    on.exit(close(con))
+    ## TODO make this nicer and don't write html tags manually like this
+    cat("<html>\n<body>\n", file = con)
+    ## styles for changes
+    cat("<style>.del { background-color: SandyBrown; } .ins{ background-color: PaleGreen; }</style>\n", file = con, append = TRUE)
+    ## styles to make <pre> tags line-wrap
+    cat("<style>pre { white-space: pre-wrap;       /* css-3 */\n", file = con, append = TRUE)
+    cat("white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */\n", file = con, append = TRUE)
+    cat("white-space: -pre-wrap;      /* Opera 4-6 */\n", file = con, append = TRUE)
+    cat("white-space: -o-pre-wrap;    /* Opera 7 */\n", file = con, append = TRUE)
+    cat("word-wrap: break-word;       /* Internet Explorer 5.5+ */\n", file = con, append = TRUE)
+    cat("</style>\n", file = con, append = TRUE)
+    cat("<pre id = \"diffcontent\">\n", file = con, append = TRUE)
+    ## TODO: need to escape all HTML content in diffout, else it will be interpreted as HTML
+    cat(diffout, file = con, sep = "\n", append = TRUE)
+    cat("</pre>\n", file = con, append = TRUE)
+    cat("</body>\n</html>\n", file = con, append = TRUE)
+    intfile
 }

@@ -5,8 +5,7 @@
 \title{Render the differences between two rmarkdown files}
 \usage{
 diff_rmd(current_file, reference_file = "HEAD",
-  output_format = "html_document", keep_intermediate = FALSE,
-  quiet = TRUE)
+  output_format = "html_document")
 }
 \arguments{
 \item{current_file}{string: path to file after changes}
@@ -14,10 +13,6 @@ diff_rmd(current_file, reference_file = "HEAD",
 \item{reference_file}{string: path to file before changes}
 
 \item{output_format}{string: format of the output file (currently only \code{"html_document"})}
-
-\item{keep_intermediate}{logical: keep the intermediate rmarkdown file (which contains the marked-up differences)}
-
-\item{quiet}{logical: if \code{TRUE}, suppress pandoc output during \code{rmarkdown::render} call}
 }
 \value{
 A list containing elements \code{rendered} (the path to the rendered diff file) and (if \code{keep_intermediate = TRUE}) \code{intermediate} (the path to the intermediate file)
