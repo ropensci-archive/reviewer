@@ -1,7 +1,7 @@
 Package: reviewer
 Version: 0.0.0.9000
-Title: What the Package Does (One Line, Title Case)
-Description: What the package does (one paragraph).
+Title: Improving the Track Changes and Reviewing Experience in R Markdown
+Description: Provides functionality to compare two versions of an rmarkdown document and display their differences in a nicely-formatted manner, along with an RStudio addin that adds the required JavaScript code to an rmarkdown document, so that when rendered to HTML it can be annotated using the Hypothes.is service.
 Authors@R: c(person("Amy", "Stringer", , email = "amy.stringer@me.com", role = c("aut", "cre")),
              person("Ben", "Raymond", role = c("aut")),
              person("Mark", "Dulhunty", role = c("aut")), 
