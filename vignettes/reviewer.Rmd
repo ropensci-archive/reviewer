@@ -1,6 +1,6 @@
 ---
 title: "Reviewer"
-author: "The reviewer package authors"
+author: "Amy Stringer, Ben Raymond, Mark Dulhunty, Laura de Jong"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -66,3 +66,4 @@ result <- diff_rmd(modified_file, "750ab4")
 ```
 
 
+<script src="https://hypothes.is/embed.js" async></script>
