@@ -2,13 +2,16 @@
 % Please edit documentation in R/diff_rmd_addin.R
 \name{diff_rmd_addin}
 \alias{diff_rmd_addin}
-\title{Rstudio addin to render the differences between two rmarkdown files}
+\title{Rstudio addin to display the raw (unrendered) differences between two
+rmarkdown files}
 \usage{
 diff_rmd_addin()
 }
 \value{
-Viewable html of the diff
+Displays viewable html of the diff in the RStudio Viewer pane. If
+  file is identical to previous version a message is provided. This may occur
+  if changes since the last commit haven't been saved.
 }
 \description{
-This addin is a small wrapper for \code{diff_rmd}
+This addin is a small wrapper for \code{diff_rmd()}.
 }

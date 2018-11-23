@@ -63,5 +63,15 @@ Or we can compare it to how it appeared in the git repository after a particular
 result <- diff_rmd(reference_file, "750ab4")
 ```
 
+## Annotating web pages
+
+Anyone can view annotations, but to fully use the annotation functionality and
+add your own annotations an account is needed at [the Hypothes.is
+website](https://hypothes.is/signup). Annotations can be enabled by using the
+RStudio addin `Insert html annotation js snippet`.  Annotations have even been
+enabled for this document!  It works by adding the following javascript snippet
+to the bottom of your RMarkdown document:
+
+`<script src="https://hypothes.is/embed.js" async></script>`
 
 <script src="https://hypothes.is/embed.js" async></script>

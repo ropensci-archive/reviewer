@@ -4,9 +4,9 @@
 \name{reviewer-package}
 \alias{reviewer}
 \alias{reviewer-package}
-\title{reviewer: What the Package Does (One Line, Title Case)}
+\title{reviewer: Improving the Track Changes and Reviewing Experience in R Markdown}
 \description{
-What the package does (one paragraph).
+Provides functionality to compare two versions of an rmarkdown document and display their differences in a nicely-formatted manner, along with an RStudio addin that adds the required JavaScript code to an rmarkdown document, so that when rendered to HTML it can be annotated using the Hypothes.is service.
 }
 \author{
 \strong{Maintainer}: Amy Stringer \email{amy.stringer@me.com}
