@@ -1,0 +1,6 @@
+pandoc: '2.4'
+pkgdown: 1.0.0
+pkgdown_sha: ~
+articles:
+  reviewer: reviewer.html
+
