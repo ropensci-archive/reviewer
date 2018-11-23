@@ -37,7 +37,7 @@ reference_file <- tempfile2
 
 Compare:
 
-```{r dodiff, eval = FALSE}
+```{r dodiff}
 library(reviewer)
 result <- diff_rmd(modified_file, reference_file)
 ```
@@ -45,9 +45,7 @@ result <- diff_rmd(modified_file, reference_file)
 And our output:
 
 ```{r dodiff-hidden, echo = FALSE}
-## some minor trickery to make the rendered output appear properly in the README.md
-library(reviewer)
-result <- diff_rmd(modified_file, reference_file)
+## some minor trickery to make the rendered output appear properly in the rendered file
 htmltools::includeHTML(result$raw)
 ```
 
@@ -62,7 +60,7 @@ result <- diff_rmd(modified_file)
 Or we can compare it to how it appeared in the git repository after a particular commit (here, the commit with reference 750ab4):
 
 ```{r diff-ex-3, eval = FALSE}
-result <- diff_rmd(modified_file, "750ab4")
+result <- diff_rmd(reference_file, "750ab4")
 ```
 
 
