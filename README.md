@@ -3,6 +3,9 @@
 
 # reviewer
 
+[![Project Status: Abandoned – Initial development has started, but there has not yet been a stable, usable release; the project has been abandoned and the author(s) do not intend on continuing development.](https://www.repostatus.org/badges/latest/abandoned.svg)](https://www.repostatus.org/#abandoned)
+
+
 Improving the track changes and reviewing experience in R markdown.
 `reviewer` provides two main functions:
 
@@ -11,15 +14,6 @@ Improving the track changes and reviewing experience in R markdown.
     annotated using the Hypothes.is service
   - the capability to compare two versions of an rmarkdown document and
     display their differences in a nicely-formatted manner.
-
-## Installation
-
-You can install the development version of `reviewer` from
-[GitHub](https://github.com/ropenscilabs/reviewer) with:
-
-``` r
-remotes::install_github("ropenscilabs/reviewer")
-```
 
 ## Annotating web pages
 
